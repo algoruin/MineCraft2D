@@ -2,7 +2,6 @@ package com.game.engine.objects;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.LinkedList;
 
@@ -10,14 +9,18 @@ public class Player extends BaseObject {
 
 	public float grav;
 	public boolean grounded = true;
+	public boolean[] moving;
 
 	public Player(float x, float y, float w, float h, String id) {
 		super(x, y, w, h, id);
 		grav = 0;
+		moving = new boolean[2];
 	}
 
 	@Override
 	public void update(LinkedList<BaseObject> ents) {
+		x += hspd;
+		y += vspd;
 		boolean grounded = false;
 		for (int i = 0; i < ents.size(); i += 1) {
 			BaseObject block = ents.get(i);
@@ -28,39 +31,47 @@ public class Player extends BaseObject {
 					y = block.y - h;
 					grounded = true;
 				}
+				if (getBoundsTop().intersects(block.getBounds())) {
+					vspd = 0;
+					y = block.y + block.h;
+				}
 
 				if (getBoundsLeft().intersects(block.getBounds())) {
 					hspd = 0;
-					x = block.x + block.w + 2;
+					x = block.x + block.w;
+				} else {
+					if (moving[0]) {
+						hspd = -1;
+					}
 				}
 				if (getBoundsRight().intersects(block.getBounds())) {
 					hspd = 0;
-					x = block.x - w - 2;
+					x = block.x - w;
+				} else {
+					if (moving[1]) {
+						hspd = 1;
+					}
 				}
 			}
 		}
 		if (!grounded) {
-			grav = 0.5f;
 			vspd += grav;
+			grav = 0.1f;
 		}
 		this.grounded = grounded;
 		if (vspd > 1) {
 			vspd = 1;
 		}
-		x += hspd;
-		y += vspd;
 	}
 
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(Color.blue);
 		g.fillRect((int) x, (int) y, (int) w, (int) h);
-		g.setColor(Color.red);
-		((Graphics2D) g).draw(getBoundsBot());
 	}
 
 	public Rectangle getBoundsBot() {
-		return new Rectangle((int) x + 3, (int) (y + h) - 3, (int) (w - 7), 4);
+		return new Rectangle((int) x + 3, (int) (y + h) - 3, (int) (w - 7), 5);
 	}
 
 	public Rectangle getBoundsTop() {
@@ -68,11 +79,11 @@ public class Player extends BaseObject {
 	}
 
 	public Rectangle getBoundsLeft() {
-		return new Rectangle((int) x - 2, (int) y + 3, (int) 2, (int) h - 6);
+		return new Rectangle((int) x, (int) y + 3, (int) 2, (int) h - 6);
 	}
 
 	public Rectangle getBoundsRight() {
-		return new Rectangle((int) (x + w) - 2, (int) y + 3, (int) 3, (int) h - 6);
+		return new Rectangle((int) (x + w) - 3, (int) y + 3, (int) 3, (int) h - 6);
 	}
 
 }
