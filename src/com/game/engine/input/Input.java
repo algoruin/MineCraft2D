@@ -17,8 +17,9 @@ public class Input implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_SPACE && player.vspd == 0) {
+		if (e.getKeyCode() == KeyEvent.VK_SPACE && player.grounded) {
 			player.vspd = -10;
+			player.grounded = false;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_Q) {
 			player.hspd = -1;
@@ -48,14 +49,15 @@ public class Input implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_SPACE && player.vspd == 0) {
+		if (e.getKeyChar() == ' ' && player.grounded == true) {
 			player.vspd = -10;
+			player.grounded = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_Q) {
+		if (e.getKeyChar() == 'q') {
 			player.hspd = -1;
 			keys[1] = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_D) {
+		if (e.getKeyChar() == 'd') {
 			player.hspd = 1;
 			keys[0] = true;
 		}
