@@ -9,6 +9,8 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
+import com.game.engine.input.Input;
+
 public class Game extends Canvas implements Runnable {
 
 	public static final long serialVersionUID = 1L;
@@ -41,7 +43,7 @@ public class Game extends Canvas implements Runnable {
 	public void run() {
 		double last = System.nanoTime();
 		double delta = 0;
-		double fps = 1000000000.0 / 60.0;
+		double fps = 100000000.0 / 60.0;
 		init();
 		while (true) {
 			double now = System.nanoTime();
@@ -59,6 +61,8 @@ public class Game extends Canvas implements Runnable {
 		width = getWidth();
 		height = getHeight();
 		ents = new Objects();
+		Input input = new Input(ents.player);
+		addKeyListener(input);
 	}
 
 	public void update() {
