@@ -24,7 +24,6 @@ public class InventoryWindow extends Window {
 			x = mouseX - cx;
 			y = mouseY - cy;
 		}
-		System.out.println(x + ", " + y);
 	}
 
 	@Override
