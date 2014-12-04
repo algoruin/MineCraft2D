@@ -15,8 +15,8 @@ public class Game extends Canvas implements Runnable {
 
 	public static final long serialVersionUID = 1L;
 
-	public static int width = 600;
-	public static int height = 400;
+	public static int width = 900;
+	public static int height = 600;
 	public static final String title = "Game - 0.01";
 
 	Objects ents;
@@ -87,7 +87,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		Graphics g = bs.getDrawGraphics();
 
-		g.setColor(Color.gray);
+		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		int x = -(int) ((ents.player.x + (ents.player.w / 2)) - (getWidth() / 2));
