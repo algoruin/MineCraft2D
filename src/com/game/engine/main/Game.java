@@ -19,8 +19,9 @@ public class Game extends Canvas implements Runnable {
 	public static int height = 600;
 	public static final String title = "Game - 0.01";
 
-	Objects ents;
-	Inventory inv;
+	public Objects ents;
+	public Inventory inv;
+	public Quests quests;
 	public static GameState state;
 
 	public Game() {
@@ -64,6 +65,7 @@ public class Game extends Canvas implements Runnable {
 		height = getHeight();
 		ents = new Objects();
 		inv = new Inventory();
+		quests = new Quests(this);
 		Input input = new Input(ents.player, inv);
 		addKeyListener(input);
 		addMouseListener(input);
@@ -74,6 +76,7 @@ public class Game extends Canvas implements Runnable {
 
 	public void update() {
 		ents.update();
+		quests.update();
 		if (state == GameState.Inventory) {
 			inv.update();
 		}
@@ -96,10 +99,11 @@ public class Game extends Canvas implements Runnable {
 		((Graphics2D) g).translate(x, y);
 
 		ents.draw(g);
+		quests.draw(g);
 
 		((Graphics2D) g).translate(-x, -y);
-		
-		if(state == GameState.Inventory){
+
+		if (state == GameState.Inventory) {
 			inv.draw(g);
 		}
 
