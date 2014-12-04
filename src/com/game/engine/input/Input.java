@@ -1,18 +1,32 @@
 package com.game.engine.input;
 
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
+import com.game.engine.main.Game;
+import com.game.engine.main.GameState;
+import com.game.engine.main.Inventory;
 import com.game.engine.objects.Player;
 
-public class Input implements KeyListener {
+public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
 	Player player;
+	Inventory inv;
 	boolean[] keys;
+	boolean pressed;
+	int cW, cH;
 
-	public Input(Player player) {
+	public Input(Player player, Inventory inv) {
 		this.player = player;
+		this.inv = inv;
 		keys = new boolean[2];
+		pressed = false;
+		cW = 20;
+		cH = 50;
 	}
 
 	@Override
@@ -23,14 +37,14 @@ public class Input implements KeyListener {
 			player.grounded = false;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_Q) {
-			player.hspd = -0.5f;
+			player.hspd = -1;
+			player.dir = player.hspd;
 			keys[1] = true;
-			player.moving[0] = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_D) {
-			player.hspd = 0.5f;
+			player.hspd = +1;
+			player.dir = player.hspd;
 			keys[0] = true;
-			player.moving[1] = true;
 		}
 	}
 
@@ -39,34 +53,72 @@ public class Input implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_Q) {
 			if (!keys[0]) {
 				player.hspd = 0;
-				keys[1] = false;
-				player.moving[0] = false;
 			}
+			keys[1] = false;
+			player.dir = player.hspd;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_D) {
 			if (!keys[1]) {
 				player.hspd = 0;
-				keys[0] = false;
-				player.moving[1] = false;
 			}
+			keys[0] = false;
+			player.dir = player.hspd;
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		if (e.getKeyChar() == ' ' && player.grounded == true) {
-			player.vspd = -5;
-			player.grav = 0.1f;
-			player.grounded = false;
+		if (e.getKeyChar() == 'e') {
+			if (Game.state == GameState.Game) {
+				Game.state = GameState.Inventory;
+			} else if (Game.state == GameState.Inventory) {
+				Game.state = GameState.Game;
+			}
 		}
-		if (e.getKeyChar() == 'q') {
-			player.hspd = -0.5f;
-			keys[1] = true;
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if (Game.state == GameState.Inventory && pressed) {
+			inv.win.mouseX = e.getX();
+			inv.win.mouseY = e.getY();
 		}
-		if (e.getKeyChar() == 'd') {
-			player.hspd = 0.5f;
-			keys[0] = true;
+		inv.win.dragging = true;
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (new Rectangle(e.getX() - (cW / 2), e.getY() - (cH / 2), cW, cH).intersects(inv.win.getBounds()) && Game.state == GameState.Inventory && !pressed) {
+			inv.win.cx = e.getX() - inv.win.x;
+			inv.win.cy = e.getY() - inv.win.y;
+			pressed = true;
 		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		inv.win.dragging = false;
+		pressed = false;
 	}
 
 }

@@ -12,6 +12,8 @@ public abstract class BaseItem {
 		this.id = id;
 	}
 
+	public abstract void update();
+
 	public abstract void draw(Graphics g);
 
 }

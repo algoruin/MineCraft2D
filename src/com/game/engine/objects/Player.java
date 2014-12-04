@@ -9,12 +9,12 @@ public class Player extends BaseObject {
 
 	public float grav;
 	public boolean grounded = true;
-	public boolean[] moving;
+	public float dir;
 
 	public Player(float x, float y, float w, float h, String id) {
 		super(x, y, w, h, id);
 		grav = 0;
-		moving = new boolean[2];
+		dir = 0;
 	}
 
 	@Override
@@ -22,6 +22,7 @@ public class Player extends BaseObject {
 		x += hspd;
 		y += vspd;
 		boolean grounded = false;
+		boolean moving = true;
 		for (int i = 0; i < ents.size(); i += 1) {
 			BaseObject block = ents.get(i);
 			if (!block.id.equals("player")) {
@@ -39,18 +40,12 @@ public class Player extends BaseObject {
 				if (getBoundsLeft().intersects(block.getBounds())) {
 					hspd = 0;
 					x = block.x + block.w;
-				} else {
-					if (moving[0]) {
-						hspd = -1;
-					}
+					moving = false;
 				}
 				if (getBoundsRight().intersects(block.getBounds())) {
 					hspd = 0;
 					x = block.x - w;
-				} else {
-					if (moving[1]) {
-						hspd = 1;
-					}
+					moving = false;
 				}
 			}
 		}
@@ -61,6 +56,15 @@ public class Player extends BaseObject {
 		this.grounded = grounded;
 		if (vspd > 1) {
 			vspd = 1;
+		}
+		if (moving) {
+			hspd = dir;
+		}
+		if (hspd > 1) {
+			hspd = 1;
+		}
+		if (hspd < -1) {
+			hspd = -1;
 		}
 	}
 

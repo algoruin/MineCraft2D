@@ -20,6 +20,8 @@ public class Game extends Canvas implements Runnable {
 	public static final String title = "Game - 0.01";
 
 	Objects ents;
+	Inventory inv;
+	public static GameState state;
 
 	public Game() {
 		Dimension dim = new Dimension(width, height);
@@ -61,12 +63,20 @@ public class Game extends Canvas implements Runnable {
 		width = getWidth();
 		height = getHeight();
 		ents = new Objects();
-		Input input = new Input(ents.player);
+		inv = new Inventory();
+		Input input = new Input(ents.player, inv);
 		addKeyListener(input);
+		addMouseListener(input);
+		addMouseMotionListener(input);
+
+		state = GameState.Game;
 	}
 
 	public void update() {
 		ents.update();
+		if (state == GameState.Inventory) {
+			inv.update();
+		}
 	}
 
 	public void draw() {
@@ -88,6 +98,10 @@ public class Game extends Canvas implements Runnable {
 		ents.draw(g);
 
 		((Graphics2D) g).translate(-x, -y);
+		
+		if(state == GameState.Inventory){
+			inv.draw(g);
+		}
 
 		g.dispose();
 		bs.show();
